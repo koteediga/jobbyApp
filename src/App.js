@@ -48,7 +48,13 @@ const App = () => (
   <Switch>
     <Route exact path="/login" component={LoginComponent} />
     <ProtectedRoute exact path="/" component={Home} />
-    <ProtectedRoute exact path="/jobs" component={Jobcomponent} />
+    <ProtectedRoute
+      exact
+      path="/jobs"
+      employmentTypesList={employmentTypesList}
+      salaryRangesList={salaryRangesList}
+      component={Jobcomponent}
+    />
   </Switch>
 )
 export default App
