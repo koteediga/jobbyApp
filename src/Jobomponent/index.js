@@ -5,11 +5,63 @@ class Jobcomponent extends Component {
   state = {
     isActive: false,
     profileDetails: {},
+    jobDetails: {},
     Loading: false,
   }
 
   componentDidMount() {
     this.fetchprofileData()
+    this.fetchjobData()
+  }
+
+  fetchjobData = async () => {
+    const url = 'https://apis.ccbp.in/jobs'
+    const options = {
+      method: 'GET',
+    }
+    try {
+      const response = await fetch(url, options)
+      console.log(response.ok)
+      if (response.ok) {
+        const data = await response.json()
+        console.log(data.jobs)
+        this.setState({jobDetails: data.jobs, Loading: false})
+      } else {
+        console.error('Fetching error')
+        this.setState({
+          Loading: false,
+        })
+      }
+    } catch (error) {
+      console.log('Error in fetching data:', error)
+      this.setState({
+        Loading: false,
+      })
+    }
+  }
+
+  renderCompany = details => {
+    const updatedlist = {
+      companyLogoUrl: details.company_logo_url,
+      employmentType: details.employment_type,
+      id: details.id,
+      jobDescription: details.job_description,
+      location: details.location,
+      packagePerAnnum: details.package_per_annum,
+      rating: details.rating,
+      title: details.title,
+    }
+    return (
+      <li>
+        <img src={updatedlist.companyLogoUrl} alt={updatedlist.title} />
+        <h1>{updatedlist.employmentType}</h1>
+        <p>{updatedlist.title}</p>
+        <p>{updatedlist.rating}</p>
+        <h1>{details.packagePerAnnum}</h1>
+        <h1>Description</h1>
+        <p>{updatedlist.jobDescription}</p>
+      </li>
+    )
   }
 
   fetchprofileData = async () => {
@@ -54,7 +106,7 @@ class Jobcomponent extends Component {
   }
 
   render() {
-    const {Loading} = this.state
+    const {Loading, jobDetails, profileDetails} = this.state
     const {salaryRangesList, employmentTypesList} = this.props
     console.log(salaryRangesList[0])
     return (
@@ -83,6 +135,16 @@ class Jobcomponent extends Component {
                   <input type="radio" id={each.salaryRangeId} />
                   <label htmlFor={each.salaryRangeId}>{each.label}</label>
                 </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div>
+          <input type="search" />
+          <div>
+            <ul>
+              {jobDetails.map(each => (
+                <li>this.renderCompany(each)</li>
               ))}
             </ul>
           </div>
