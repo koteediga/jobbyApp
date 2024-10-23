@@ -6,6 +6,7 @@ class LoginComponent extends Component {
   state = {
     username: '',
     password: '',
+    isInvalid: false,
   }
 
   onChangeUsername = event => {
@@ -21,8 +22,16 @@ class LoginComponent extends Component {
   }
 
   onsubmitsuccess = jwtToken => {
-    const {history} = this.props
+    // const {history} = this.props
     Cookies.set('jwt_token', jwtToken)
+  }
+
+  onsubmitfailure = () => {
+    this.setState({
+      isInvalid: true,
+      username: '',
+      password: '',
+    })
   }
 
   onSubmitform = async event => {
@@ -38,15 +47,18 @@ class LoginComponent extends Component {
     }
     const response = await fetch(url, options)
     const data = await response.json()
-    if (response.okue) {
+    console.log(data)
+    console.log(response.ok)
+    if (response.ok) {
       this.onsubmitsuccess(data.jwt_token)
     } else {
       this.onsubmitfailure(data.error_msg)
     }
-    console.log('kote')
   }
 
   render() {
+    const {username, password, isInvalid} = this.state
+
     return (
       <div>
         <div>
@@ -61,6 +73,7 @@ class LoginComponent extends Component {
               type="text"
               placeholder="username"
               id="username"
+              value={username}
               onChange={this.onChangeUsername}
             />
             <label htmlFor="password">Password</label>
@@ -68,8 +81,10 @@ class LoginComponent extends Component {
               type="password"
               placeholder="username"
               id="username"
+              value={password}
               onChange={this.onChangePassword}
             />
+            {isInvalid ? "*Username and Password didn't Match" : ''}
             <button type="submit">Login</button>
           </form>
         </div>
