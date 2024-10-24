@@ -1,11 +1,13 @@
 import {Component} from 'react'
-import {Cookies} from 'js-cookie'
+import {Redirect} from 'react-router-dom'
+import Cookies from 'js-cookie'
 import './index.css'
 
 class LoginComponent extends Component {
   state = {
     username: '',
     password: '',
+    errorMsg: '',
     isInvalid: false,
   }
 
@@ -22,14 +24,19 @@ class LoginComponent extends Component {
   }
 
   onsubmitsuccess = jwtToken => {
-    // const {history} = this.props
-    Cookies.set('jwt_token', jwtToken)
+    const {history} = this.props
+    this.setState({
+      isInvalid: false,
+    })
+    Cookies.set('jwt_token', jwtToken, {expires: 30})
+    history.replace('/')
   }
 
-  onsubmitfailure = () => {
+  onsubmitfailure = errorMsg => {
     this.setState({
       isInvalid: true,
       username: '',
+      errorMsg,
       password: '',
     })
   }
@@ -58,13 +65,17 @@ class LoginComponent extends Component {
 
   render() {
     const {username, password, isInvalid} = this.state
-
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
     return (
       <div>
         <div>
           <img
             src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
             className="logo"
+            alt="website logo"
           />
           <h1>Lobby</h1>
           <form onSubmit={this.onSubmitform}>
@@ -79,8 +90,8 @@ class LoginComponent extends Component {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              placeholder="username"
-              id="username"
+              placeholder="password"
+              id="password"
               value={password}
               onChange={this.onChangePassword}
             />

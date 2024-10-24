@@ -1,4 +1,6 @@
 import {Component} from 'react'
+import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 import Header from '../Header'
 
 class Jobcomponent extends Component {
@@ -6,7 +8,8 @@ class Jobcomponent extends Component {
     isActive: false,
     profileDetails: {},
     jobDetails: {},
-    Loading: false,
+
+    Loading: true,
   }
 
   componentDidMount() {
@@ -16,9 +19,15 @@ class Jobcomponent extends Component {
 
   fetchjobData = async () => {
     const url = 'https://apis.ccbp.in/jobs'
+    const jwtToken = Cookies.get('jwt_token')
+
     const options = {
       method: 'GET',
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
     }
+    this.setState({Loading: true})
     try {
       const response = await fetch(url, options)
       console.log(response.ok)
@@ -66,11 +75,15 @@ class Jobcomponent extends Component {
 
   fetchprofileData = async () => {
     const url = 'https://apis.ccbp.in/profile'
+    const jwtToken = Cookies.get('jwt_token')
 
     const options = {
       method: 'GET',
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
     }
-
+    this.setState({Loading: true})
     try {
       const response = await fetch(url, options)
       console.log(response.ok)
@@ -109,6 +122,9 @@ class Jobcomponent extends Component {
     const {Loading, jobDetails, profileDetails} = this.state
     const {salaryRangesList, employmentTypesList} = this.props
     console.log(salaryRangesList[0])
+    if (Loading) {
+      return <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+    }
     return (
       <>
         <div>
@@ -119,14 +135,14 @@ class Jobcomponent extends Component {
           <div>{this.renderprofile()}</div>
           <div>
             <p>Types of Employment</p>
-            {/* <ul>
+            <ul>
               {employmentTypesList.map(each => (
                 <li key={each.employmentTypeId}>
                   <input type="checkbox" id={each.employmentTypeId} />
                   <label htmlFor={each.employmentTypeId}>{each.label}</label>
                 </li>
               ))}
-            </ul> */}
+            </ul>
           </div>
           <div>
             <ul>
@@ -144,7 +160,7 @@ class Jobcomponent extends Component {
           <div>
             <ul>
               {jobDetails.map(each => (
-                <li>this.renderCompany(each)</li>
+                <li>{this.renderCompany(each)}</li>
               ))}
             </ul>
           </div>
