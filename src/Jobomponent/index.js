@@ -2,19 +2,64 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import Header from '../Header'
+import './index.css'
+
+const employmentTypesList = [
+  {
+    label: 'Full Time',
+    employmentTypeId: 'FULLTIME',
+  },
+  {
+    label: 'Part Time',
+    employmentTypeId: 'PARTTIME',
+  },
+  {
+    label: 'Freelance',
+    employmentTypeId: 'FREELANCE',
+  },
+  {
+    label: 'Internship',
+    employmentTypeId: 'INTERNSHIP',
+  },
+]
+
+const salaryRangesList = [
+  {
+    salaryRangeId: '1000000',
+    label: '10 LPA and above',
+  },
+  {
+    salaryRangeId: '2000000',
+    label: '20 LPA and above',
+  },
+  {
+    salaryRangeId: '3000000',
+    label: '30 LPA and above',
+  },
+  {
+    salaryRangeId: '4000000',
+    label: '40 LPA and above',
+  },
+]
 
 class Jobcomponent extends Component {
   state = {
     isActive: false,
     profileDetails: {},
     jobDetails: {},
-
+    inputValue: '',
     Loading: true,
   }
 
   componentDidMount() {
     this.fetchprofileData()
     this.fetchjobData()
+  }
+
+  changeInput = event => {
+    this.setState({
+      inputValue: event.target.value,
+    })
   }
 
   fetchjobData = async () => {
@@ -33,7 +78,7 @@ class Jobcomponent extends Component {
       console.log(response.ok)
       if (response.ok) {
         const data = await response.json()
-        console.log(data.jobs)
+        //  console.log(data.jobs)
         this.setState({jobDetails: data.jobs, Loading: false})
       } else {
         console.error('Fetching error')
@@ -89,7 +134,7 @@ class Jobcomponent extends Component {
       console.log(response.ok)
       if (response.ok) {
         const data = await response.json()
-        console.log(data.profile_details)
+        // console.log(data.profile_details)
         this.setState({profileDetails: data.profile_details, Loading: false})
       } else {
         console.error('Fetching error')
@@ -107,10 +152,9 @@ class Jobcomponent extends Component {
 
   renderprofile = () => {
     const {Loading, profileDetails} = this.state
-    console.log(profileDetails)
+    // console.log(profileDetails)
     return (
       <div>
-        <h1>kote</h1>
         <img src={profileDetails.profile_image_url} className="profile" />
         <h1>{profileDetails.name}</h1>
         <p>{profileDetails.short_bio}</p>
@@ -119,9 +163,12 @@ class Jobcomponent extends Component {
   }
 
   render() {
-    const {Loading, jobDetails, profileDetails} = this.state
-    const {salaryRangesList, employmentTypesList} = this.props
-    console.log(salaryRangesList[0])
+    const {Loading, jobDetails, profileDetails, inputValue} = this.state
+
+    const filteredJob = jobDetails.filter(each =>
+      each.title.toLowerCase().includes(inputValue.toLowerCase()),
+    )
+    console.log(filteredJob)
     if (Loading) {
       return <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     }
@@ -130,39 +177,45 @@ class Jobcomponent extends Component {
         <div>
           <Header />
         </div>
+        <div className="container">
+          <div className="container1">
+            <div>{this.renderprofile()}</div>
+            <div>
+              <p>Types of Employment</p>
+              <ul>
+                {employmentTypesList.map(each => (
+                  <li key={each.employmentTypeId}>
+                    <input type="checkbox" id={each.employmentTypeId} />
+                    <label htmlFor={each.employmentTypeId}>{each.label}</label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <ul>
+                {salaryRangesList.map(each => (
+                  <li key={each.salaryRangeId}>
+                    <input type="radio" id={each.salaryRangeId} />
+                    <label htmlFor={each.salaryRangeId}>{each.label}</label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="container2">
+            <input
+              type="search"
+              onChange={this.changeInput}
+              value={inputValue}
+            />
 
-        <div>
-          <div>{this.renderprofile()}</div>
-          <div>
-            <p>Types of Employment</p>
-            <ul>
-              {employmentTypesList.map(each => (
-                <li key={each.employmentTypeId}>
-                  <input type="checkbox" id={each.employmentTypeId} />
-                  <label htmlFor={each.employmentTypeId}>{each.label}</label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <ul>
-              {salaryRangesList.map(each => (
-                <li key={each.salaryRangeId}>
-                  <input type="radio" id={each.salaryRangeId} />
-                  <label htmlFor={each.salaryRangeId}>{each.label}</label>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div>
-          <input type="search" />
-          <div>
-            <ul>
-              {jobDetails.map(each => (
-                <li>{this.renderCompany(each)}</li>
-              ))}
-            </ul>
+            <div>
+              <ul>
+                {jobDetails.map(each => (
+                  <li>{this.renderCompany(each)}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </>
