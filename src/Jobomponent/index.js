@@ -46,7 +46,7 @@ class Jobcomponent extends Component {
   state = {
     isActive: false,
     profileDetails: {},
-    jobDetails: {},
+    jobDetails: [],
     inputValue: '',
     Loading: true,
   }
@@ -211,7 +211,7 @@ class Jobcomponent extends Component {
 
             <div>
               <ul>
-                {jobDetails.map(each => (
+                {filteredJob.map(each => (
                   <li>{this.renderCompany(each)}</li>
                 ))}
               </ul>
