@@ -1,4 +1,5 @@
 import {Component} from 'react'
+import {Link} from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import Header from '../Header'
@@ -48,6 +49,7 @@ class Jobcomponent extends Component {
     profileDetails: {},
     jobDetails: [],
     inputValue: '',
+    activeId: 1,
     Loading: true,
   }
 
@@ -59,6 +61,13 @@ class Jobcomponent extends Component {
   changeInput = event => {
     this.setState({
       inputValue: event.target.value,
+    })
+  }
+
+  selectCompany = Aid => {
+    console.log(Aid)
+    this.setState({
+      activeId: Aid,
     })
   }
 
@@ -106,15 +115,17 @@ class Jobcomponent extends Component {
       title: details.title,
     }
     return (
-      <li>
-        <img src={updatedlist.companyLogoUrl} alt={updatedlist.title} />
-        <h1>{updatedlist.employmentType}</h1>
-        <p>{updatedlist.title}</p>
-        <p>{updatedlist.rating}</p>
-        <h1>{details.packagePerAnnum}</h1>
-        <h1>Description</h1>
-        <p>{updatedlist.jobDescription}</p>
-      </li>
+      <Link to={`jobs/${updatedlist.id}`}>
+        <li onClick={this.selectCompany}>
+          <img src={updatedlist.companyLogoUrl} alt={updatedlist.title} />
+          <h1>{updatedlist.employmentType}</h1>
+          <p>{updatedlist.title}</p>
+          <p>{updatedlist.rating}</p>
+          <h1>{details.packagePerAnnum}</h1>
+          <h1>Description</h1>
+          <p>{updatedlist.jobDescription}</p>
+        </li>
+      </Link>
     )
   }
 
@@ -168,7 +179,7 @@ class Jobcomponent extends Component {
     const filteredJob = jobDetails.filter(each =>
       each.title.toLowerCase().includes(inputValue.toLowerCase()),
     )
-    console.log(filteredJob)
+    // console.log(filteredJob)
     if (Loading) {
       return <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     }
