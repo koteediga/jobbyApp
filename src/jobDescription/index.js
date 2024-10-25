@@ -1,10 +1,12 @@
-import Component from 'react'
+import {Component} from 'react'
 import Cookies from 'js-cookie'
+import Loader from 'react-loader-spinner'
 
 class jobDescription extends Component {
   state = {
     companyDetails: {},
     similar: [],
+    Loading: true,
   }
 
   componentDidMount() {
@@ -27,19 +29,24 @@ class jobDescription extends Component {
         },
         method: 'GET',
       }
-
-      const response = await fetch(url, options)
-      const data = await response.json()
-      console.log(data)
-      this.setState({
-        companyDetails: data.job_details,
-        similar: data.similar_jobs,
-      })
+      this.setState({Loading: true})
+      try {
+        const response = await fetch(url, options)
+        const data = await response.json()
+        console.log(data)
+        this.setState({
+          companyDetails: data.job_details,
+          similar: data.similar_jobs,
+          Loading: false,
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   render() {
-    const {companyDetails, similar} = this.state
+    const {companyDetails, similar, Loading} = this.state
     const updatedata = {
       logo: companyDetails.company_logo_url,
       url1: companyDetails.company_website_url,
@@ -51,6 +58,9 @@ class jobDescription extends Component {
       location: companyDetails.location,
       package: companyDetails.package_per_annum,
       rating: companyDetails.rating,
+    }
+    if (Loading) {
+      return <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     }
 
     return (
