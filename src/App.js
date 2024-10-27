@@ -6,6 +6,7 @@ import Home from './Home'
 import LoginComponent from './LoginComponent/index'
 import Jobcomponent from './Jobomponent'
 import jobDescription from './jobDescription'
+import NotFound from './NotFound'
 
 const App = () => (
   <Switch>
@@ -13,6 +14,7 @@ const App = () => (
     <ProtectedRoute exact path="/" component={Home} />
     <ProtectedRoute exact path="/jobs" component={Jobcomponent} />
     <ProtectedRoute exact path="/jobs/:id" component={jobDescription} />
+    <Route component={NotFound} />
   </Switch>
 )
 export default App

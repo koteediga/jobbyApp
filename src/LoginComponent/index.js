@@ -53,6 +53,7 @@ class LoginComponent extends Component {
       body: JSON.stringify(userDetails),
     }
     const response = await fetch(url, options)
+
     const data = await response.json()
     console.log(data)
     console.log(response.ok)
@@ -64,7 +65,7 @@ class LoginComponent extends Component {
   }
 
   render() {
-    const {username, password, isInvalid} = this.state
+    const {username, password, isInvalid, errorMsg} = this.state
     const jwtToken = Cookies.get('jwt_token')
     if (jwtToken !== undefined) {
       return <Redirect to="/" />
@@ -95,8 +96,9 @@ class LoginComponent extends Component {
               value={password}
               onChange={this.onChangePassword}
             />
-            {isInvalid ? "*Username and Password didn't Match" : ''}
+
             <button type="submit">Login</button>
+            {isInvalid ? <p>`${errorMsg}`</p> : ''}
           </form>
         </div>
       </div>
