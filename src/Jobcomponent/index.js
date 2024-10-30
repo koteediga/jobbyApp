@@ -93,7 +93,7 @@ class Jobcomponent extends Component {
   }
 
   fetchjobData = async () => {
-    const {employe_type, minimum_package, inputValue} = this.state
+    const {employe_type, minimum_package, inputValue, noJobActive} = this.state
     const query = employe_type.join(',')
     const url = `https://apis.ccbp.in/jobs?employment_type=${query}&minimum_package=${minimum_package}&search=${inputValue}`
     const jwtToken = Cookies.get('jwt_token')
@@ -111,8 +111,13 @@ class Jobcomponent extends Component {
       if (response.ok) {
         const data = await response.json()
         //  console.log(data.jobs)
-
-        this.setState({jobDetails: data.jobs, Loading: false})
+        if (data.jobs.length === 0) {
+          this.setState({
+            noJobActive: true,
+          })
+        } else {
+          this.setState({jobDetails: data.jobs, Loading: false})
+        }
       } else {
         console.error('Fetching error')
         this.setState({
@@ -271,7 +276,7 @@ class Jobcomponent extends Component {
               <CiSearch />
             </button> */}
             <div>
-              {filteredJob.length === 0 ? (
+              {noJobActive ? (
                 <div>
                   <h1>No Jobs Found</h1>
                   <img
