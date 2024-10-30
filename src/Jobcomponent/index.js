@@ -51,6 +51,9 @@ class Jobcomponent extends Component {
     inputValue: '',
     activeId: 1,
     Loading: true,
+    employe_type: [],
+    minimum_package: '',
+    noJobActive: false,
   }
 
   componentDidMount() {
@@ -71,8 +74,28 @@ class Jobcomponent extends Component {
     })
   }
 
+  onChangeSalaray = event => {
+    this.setState(
+      {
+        minimum_package: event.target.id,
+      },
+      this.fetchjobData,
+    )
+  }
+
+  onChangeEmployeeType = event => {
+    const {employe_type} = this.state
+    const {id, checked} = event.target
+    const updateEmployeeType = checked
+      ? [...employe_type, id]
+      : employe_type.filter(each => each !== id)
+    this.setState({employe_type: updateEmployeeType}, this.fetchjobData)
+  }
+
   fetchjobData = async () => {
-    const url = 'https://apis.ccbp.in/jobs'
+    const {employe_type, minimum_package, inputValue} = this.state
+    const query = employe_type.join(',')
+    const url = `https://apis.ccbp.in/jobs?employment_type=${query}&minimum_package=${minimum_package}&search=${inputValue}`
     const jwtToken = Cookies.get('jwt_token')
 
     const options = {
@@ -88,6 +111,7 @@ class Jobcomponent extends Component {
       if (response.ok) {
         const data = await response.json()
         //  console.log(data.jobs)
+
         this.setState({jobDetails: data.jobs, Loading: false})
       } else {
         console.error('Fetching error')
@@ -167,7 +191,11 @@ class Jobcomponent extends Component {
     // console.log(profileDetails)
     return (
       <li>
-        <img src={profileDetails.profile_image_url} className="profile" />
+        <img
+          src={profileDetails.profile_image_url}
+          alt="profile_image_url"
+          className="profile"
+        />
         <h1>{profileDetails.name}</h1>
         <p>{profileDetails.short_bio}</p>
       </li>
@@ -175,7 +203,13 @@ class Jobcomponent extends Component {
   }
 
   render() {
-    const {Loading, jobDetails, profileDetails, inputValue} = this.state
+    const {
+      Loading,
+      jobDetails,
+      profileDetails,
+      inputValue,
+      noJobActive,
+    } = this.state
 
     const filteredJob = jobDetails.filter(each =>
       each.title.toLowerCase().includes(inputValue.toLowerCase()),
@@ -201,7 +235,11 @@ class Jobcomponent extends Component {
               <ul>
                 {employmentTypesList.map(each => (
                   <li key={each.employmentTypeId}>
-                    <input type="checkbox" id={each.employmentTypeId} />
+                    <input
+                      type="checkbox"
+                      id={each.employmentTypeId}
+                      onChange={this.onChangeEmployeeType}
+                    />
                     <label htmlFor={each.employmentTypeId}>{each.label}</label>
                   </li>
                 ))}
@@ -212,7 +250,11 @@ class Jobcomponent extends Component {
               <ul>
                 {salaryRangesList.map(each => (
                   <li key={each.salaryRangeId}>
-                    <input type="radio" id={each.salaryRangeId} />
+                    <input
+                      type="radio"
+                      id={each.salaryRangeId}
+                      onChange={this.onChangeSalaray}
+                    />
                     <label htmlFor={each.salaryRangeId}>{each.label}</label>
                   </li>
                 ))}
@@ -229,11 +271,21 @@ class Jobcomponent extends Component {
               <CiSearch />
             </button> */}
             <div>
-              <ul>
-                {filteredJob.map(each => (
-                  <li>{this.renderCompany(each)}</li>
-                ))}
-              </ul>
+              {filteredJob.length === 0 ? (
+                <div>
+                  <h1>No Jobs Found</h1>
+                  <img
+                    src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+                    alt="no jobs"
+                  />
+                </div>
+              ) : (
+                <ul>
+                  {filteredJob.map(each => (
+                    <li>{this.renderCompany(each)}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
