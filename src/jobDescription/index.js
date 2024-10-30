@@ -121,7 +121,7 @@ class jobDescription extends Component {
                 />
                 <p>{each.employment_type}</p>
                 <h1>Description</h1>
-                <p>{each.description}</p>
+                <p>{each.job_description}</p>
                 <p>{each.location}</p>
                 <p>{each.rating}</p>
                 <h1>{each.title}</h1>
