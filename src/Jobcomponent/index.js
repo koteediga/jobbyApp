@@ -117,11 +117,12 @@ class Jobcomponent extends Component {
     return (
       <Link to={`jobs/${updatedlist.id}`}>
         <li onClick={this.selectCompany}>
-          <img src={updatedlist.companyLogoUrl} alt={updatedlist.title} />
+          <img src={updatedlist.companyLogoUrl} alt="company logo" />
           <h1>{updatedlist.employmentType}</h1>
-          <p>{updatedlist.title}</p>
+          <h1>{updatedlist.title}</h1>
           <p>{updatedlist.rating}</p>
           <h1>{details.packagePerAnnum}</h1>
+          <p>{details.location}</p>
           <h1>Description</h1>
           <p>{updatedlist.jobDescription}</p>
         </li>
@@ -182,13 +183,9 @@ class Jobcomponent extends Component {
     // console.log(filteredJob)
     if (Loading) {
       return (
-        <Loader
-          type="ThreeDots"
-          data-testid="loader"
-          color="#0b69ff"
-          height="50"
-          width="50"
-        />
+        <div data-testid="loader">
+          <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+        </div>
       )
     }
     return (
@@ -228,9 +225,9 @@ class Jobcomponent extends Component {
               onChange={this.changeInput}
               value={inputValue}
             />
-            <button data-testid="searchButton">
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freeiconspng.com%2Fimages%2Fsearch-icon-png&psig=AOvVaw3HyksyGNSnXxXiuuc26LWa&ust=1730358498145000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCViu3FtYkDFQAAAAAdAAAAABAE" />
-            </button>
+            {/* <button data-testid="searchButton">
+              <CiSearch />
+            </button> */}
             <div>
               <ul>
                 {filteredJob.map(each => (
