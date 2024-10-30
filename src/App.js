@@ -4,7 +4,7 @@ import './App.css'
 import ProtectedRoute from './ProtectedRoute'
 import Home from './Home'
 import LoginComponent from './LoginComponent/index'
-import Jobcomponent from './Jobomponent'
+import Jobcomponent from './Jobcomponent'
 import jobDescription from './jobDescription'
 import NotFound from './NotFound'
 

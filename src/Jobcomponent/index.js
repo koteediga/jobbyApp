@@ -165,11 +165,11 @@ class Jobcomponent extends Component {
     const {Loading, profileDetails} = this.state
     // console.log(profileDetails)
     return (
-      <div>
+      <li>
         <img src={profileDetails.profile_image_url} className="profile" />
         <h1>{profileDetails.name}</h1>
         <p>{profileDetails.short_bio}</p>
-      </div>
+      </li>
     )
   }
 
@@ -181,7 +181,15 @@ class Jobcomponent extends Component {
     )
     // console.log(filteredJob)
     if (Loading) {
-      return <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
+      return (
+        <Loader
+          type="ThreeDots"
+          data-testid="loader"
+          color="#0b69ff"
+          height="50"
+          width="50"
+        />
+      )
     }
     return (
       <>
@@ -192,7 +200,7 @@ class Jobcomponent extends Component {
           <div className="container1">
             <div>{this.renderprofile()}</div>
             <div>
-              <p>Types of Employment</p>
+              <h1>Type of Employment</h1>
               <ul>
                 {employmentTypesList.map(each => (
                   <li key={each.employmentTypeId}>
@@ -203,6 +211,7 @@ class Jobcomponent extends Component {
               </ul>
             </div>
             <div>
+              <h1>Salary Range</h1>
               <ul>
                 {salaryRangesList.map(each => (
                   <li key={each.salaryRangeId}>
@@ -219,7 +228,9 @@ class Jobcomponent extends Component {
               onChange={this.changeInput}
               value={inputValue}
             />
-
+            <button data-testid="searchButton">
+              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freeiconspng.com%2Fimages%2Fsearch-icon-png&psig=AOvVaw3HyksyGNSnXxXiuuc26LWa&ust=1730358498145000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCViu3FtYkDFQAAAAAdAAAAABAE" />
+            </button>
             <div>
               <ul>
                 {filteredJob.map(each => (
