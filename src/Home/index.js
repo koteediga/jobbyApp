@@ -5,10 +5,8 @@ import Header from '../Header'
 import './index.css'
 
 const Home = props => {
-  const findJobs = () => {}
   const onClickLogout = () => {
     const {history} = props
-
     Cookies.remove('jwt_token')
     history.replace('/login')
   }
@@ -16,14 +14,14 @@ const Home = props => {
     <>
       <div>
         <Header />
-        <button
-          type="button"
-          className="logout-desktop-btn"
-          onClick={onClickLogout}
-        >
-          Logout
-        </button>
       </div>
+      <button
+        type="button"
+        className="logout-desktop-btn"
+        onClick={onClickLogout}
+      >
+        Logout
+      </button>
       <div className="main-container">
         <h1>Find The Job That Fits Your Life</h1>
         <p>Millions of people are searching for jobs</p>

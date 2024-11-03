@@ -50,6 +50,8 @@ class Jobcomponent extends Component {
     jobDetails: [],
     inputValue: '',
     activeId: 1,
+    failureView: false,
+    isRetry: false,
     Loading: true,
     employe_type: [],
     minimum_package: '',
@@ -110,24 +112,28 @@ class Jobcomponent extends Component {
       console.log(response.ok)
       if (response.ok) {
         const data = await response.json()
-        //  console.log(data.jobs)
         if (data.jobs.length === 0) {
           this.setState({
             noJobActive: true,
           })
         } else {
-          this.setState({jobDetails: data.jobs, Loading: false})
+          this.setState({
+            jobDetails: data.jobs,
+            Loading: false,
+          })
         }
       } else {
         console.error('Fetching error')
         this.setState({
           Loading: false,
+          failureView: true,
         })
       }
     } catch (error) {
       console.log('Error in fetching data:', error)
       this.setState({
         Loading: false,
+        failureView: true,
       })
     }
   }
@@ -147,7 +153,7 @@ class Jobcomponent extends Component {
       <Link to={`jobs/${updatedlist.id}`}>
         <li onClick={this.selectCompany}>
           <img src={updatedlist.companyLogoUrl} alt="company logo" />
-          <h1>{updatedlist.employmentType}</h1>
+          <p>{updatedlist.employmentType}</p>
           <h1>{updatedlist.title}</h1>
           <p>{updatedlist.rating}</p>
           <h1>{details.packagePerAnnum}</h1>
@@ -176,20 +182,40 @@ class Jobcomponent extends Component {
       if (response.ok) {
         const data = await response.json()
         // console.log(data.profile_details)
-        this.setState({profileDetails: data.profile_details, Loading: false})
+        this.setState({
+          profileDetails: data.profile_details,
+          Loading: false,
+          isRetry: false,
+        })
       } else {
         console.error('Fetching error')
         this.setState({
           Loading: false,
+          isRetry: true,
         })
       }
     } catch (error) {
       console.log('Error in fetching data:', error)
       this.setState({
         Loading: false,
+        isRetry: true,
       })
     }
   }
+
+  renderFailureView = () => (
+    <div className="failure-view">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+        alt="failure view"
+      />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for</p>
+      <button type="button" onClick={this.fetchjobData}>
+        Retry
+      </button>
+    </div>
+  )
 
   renderprofile = () => {
     const {Loading, profileDetails} = this.state
@@ -214,6 +240,10 @@ class Jobcomponent extends Component {
       profileDetails,
       inputValue,
       noJobActive,
+      employe_type,
+      failureView,
+      minimum_package,
+      isRetry,
     } = this.state
 
     const filteredJob = jobDetails.filter(each =>
@@ -227,6 +257,10 @@ class Jobcomponent extends Component {
         </div>
       )
     }
+
+    if (failureView) {
+      return this.renderFailureView()
+    }
     return (
       <>
         <div>
@@ -234,7 +268,13 @@ class Jobcomponent extends Component {
         </div>
         <div className="container">
           <div className="container1">
-            <div>{this.renderprofile()}</div>
+            <div>
+              {!isRetry ? (
+                this.renderprofile()
+              ) : (
+                <button onClick={this.fetchprofileData}>Retry</button>
+              )}
+            </div>
             <div>
               <h1>Type of Employment</h1>
               <ul>
@@ -244,6 +284,12 @@ class Jobcomponent extends Component {
                       type="checkbox"
                       id={each.employmentTypeId}
                       onChange={this.onChangeEmployeeType}
+                      checked={employe_type.includes(each.employmentTypeId)}
+                      className={
+                        employe_type.includes(each.employmentTypeId)
+                          ? 'active'
+                          : ''
+                      }
                     />
                     <label htmlFor={each.employmentTypeId}>{each.label}</label>
                   </li>
@@ -259,6 +305,10 @@ class Jobcomponent extends Component {
                       type="radio"
                       id={each.salaryRangeId}
                       onChange={this.onChangeSalaray}
+                      checked={minimum_package === each.salaryRangeId}
+                      className={
+                        minimum_package === each.salaryRangeId ? 'active' : ''
+                      }
                     />
                     <label htmlFor={each.salaryRangeId}>{each.label}</label>
                   </li>
@@ -279,6 +329,7 @@ class Jobcomponent extends Component {
               {noJobActive ? (
                 <div>
                   <h1>No Jobs Found</h1>
+                  <p>We could not find any jobs. Try other filters</p>
                   <img
                     src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
                     alt="no jobs"
