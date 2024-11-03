@@ -39,6 +39,7 @@ class jobDescription extends Component {
             companyDetails: data.job_details,
             similar: data.similar_jobs,
             Loading: false,
+            isActive: false,
           })
         } else {
           this.setState({
@@ -47,9 +48,26 @@ class jobDescription extends Component {
         }
       } catch (error) {
         console.log(error)
+        this.setState({
+          isActive: true,
+        })
       }
     }
   }
+
+  renderFailureView = () => (
+    <div className="failure-view">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+        alt="failure view"
+      />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for</p>
+      <button type="button" onClick={this.getCompanyDescription}>
+        Retry
+      </button>
+    </div>
+  )
 
   render() {
     const {companyDetails, similar, Loading, isActive} = this.state
@@ -73,31 +91,23 @@ class jobDescription extends Component {
       )
     }
     if (isActive) {
-      return (
-        <div>
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
-            alt="failure view"
-          />
-          <h1>Oops! Something Went Wrong</h1>
-          <p>We cannot seem to find the page you are looking for</p>
-          <button>Retry</button>
-        </div>
-      )
+      return this.renderFailureView()
     }
     return (
       <div>
         <div>
-          <img src={updatedata.logo} alt="job details company logo" />
-          <a href={updatedata.url1}>Visit</a>
-          <p>{updatedata.type}</p>
-          <h1>Description</h1>
-          <p>{updatedata.rating}</p>
-          <p>{updatedata.description}</p>
+          <ul>
+            <img src={updatedata.logo} alt="job details company logo" />
+            <a href={updatedata.url1}>Visit</a>
+            <p>{updatedata.type}</p>
+            <h1>Description</h1>
+            <p>{updatedata.rating}</p>
+            <p>{updatedata.description}</p>
+          </ul>
           <h1>Skills</h1>
           <ul>
             {updatedata.skills.map(each => (
-              <li>
+              <li key={each.name}>
                 <img src={each.image_url} alt="skills" />
                 <h1>{each.name}</h1>
               </li>
@@ -107,14 +117,14 @@ class jobDescription extends Component {
           <p>{updatedata.lifeAtCompany.description}</p>
           <img src={updatedata.lifeAtCompany.image_url} alt="life_at_company" />
           <p>{updatedata.location}</p>
-          <h1>{updatedata.rating}</h1>
+          <p>{updatedata.rating}</p>
           <p>{updatedata.package}</p>
         </div>
         <div>
           <h1>Similar Jobs</h1>
           <ul>
             {similar.map(each => (
-              <li>
+              <li key={each.id}>
                 <img
                   src={each.company_logo_url}
                   alt="similar job company logo"
