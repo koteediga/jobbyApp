@@ -1,4 +1,77 @@
+
 .logo {
   height: 40px;
   width: 40px;
 }
+.login-container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.login-card {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 350px;
+  text-align: center;
+}
+
+.logo {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.title {
+  color: #2d3748;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #dcdfe6;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #4c51bf;
+}
+
+.login-button {
+  background-color: #4c51bf;
+  color: #ffffff;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #5a67d8;
+}
+
+.error-message {
+  color: #e53e3e;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
