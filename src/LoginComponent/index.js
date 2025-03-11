@@ -55,8 +55,8 @@ class LoginComponent extends Component {
     const response = await fetch(url, options)
 
     const data = await response.json()
-    console.log(data)
-    console.log(response.ok)
+    // console.log(data)
+    // console.log(response.ok)
     if (response.ok) {
       this.onsubmitsuccess(data.jwt_token)
     } else {
@@ -71,34 +71,45 @@ class LoginComponent extends Component {
       return <Redirect to="/" />
     }
     return (
-      <div>
-        <div>
+      <div className="login-container">
+        <div className="login-card">
           <img
             src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
             className="logo"
             alt="website logo"
           />
-          <h1>Lobby</h1>
+          <h1 className="title">Jobby</h1>
           <form onSubmit={this.onSubmitform}>
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              placeholder="username"
-              id="username"
-              value={username}
-              onChange={this.onChangeUsername}
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              placeholder="password"
-              id="password"
-              value={password}
-              onChange={this.onChangePassword}
-            />
-
-            <button type="submit">Login</button>
-            {isInvalid ? <p>`${errorMsg}`</p> : ''}
+            <div className="input-group">
+              <label htmlFor="username" className="input-label">
+                Username
+              </label>
+              <input
+                type="text"
+                placeholder="Enter username"
+                id="username"
+                value={username}
+                onChange={this.onChangeUsername}
+                className="input-field"
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="password" className="input-label">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter password"
+                id="password"
+                value={password}
+                onChange={this.onChangePassword}
+                className="input-field"
+              />
+            </div>
+            <button type="submit" className="login-button">
+              Login
+            </button>
+            {isInvalid ? <p className="error-message">{errorMsg}</p> : ''}
           </form>
         </div>
       </div>
