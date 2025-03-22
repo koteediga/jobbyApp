@@ -24,6 +24,7 @@ const employmentTypesList = [
   },
 ]
 
+
 const salaryRangesList = [
   {
     salaryRangeId: '1000000',
